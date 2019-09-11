@@ -3,7 +3,7 @@
 import adventurelib
 from adventurelib import say
 import time
-
+from . import commands
 import random
 
 def printSlow(value, *args, **kwargs):
