@@ -14,18 +14,36 @@ def printSlow(value, *args, **kwargs):
     print('')
 
 def bootstrap():
-    num_chars = random.randint(10, 500)
-    # num_chars= 2000
+    num_chars = random.randint(50, 250)
+    # num_chars= 20000
+
+    printSlow("Last login: somedate.exe")
+    for _ in range(3):
+        print('.')
+        time.sleep(.7)
 
     for _ in range(num_chars):
         print(chr(random.randint(0, 255)), end='', flush=True)
         time.sleep((random.random() * 0.3) ** 2)
-    printSlow("Welcome to the terminal")
-    printSlow("Last login: somedate.exe\n")
-    printSlow("Enter the passphrase.")
+    
+    printSlow("Welcome to the terminal\n")
+    printSlow("- on v178.4.0-starthread")
+    printSlow("-> screenfetch\n")
+
+    passphrase = input("Enter the passphrase.\n")
+    while passphrase != "Fuck You":
+        passphrase = input("Enter the passphrase.\n")
+    printSlow("__Access__Granted__\n\n\n")
 
 
 def start():
     bootstrap()
     adventurelib.start()
     # curses.wrapper(main)
+
+
+
+
+
+
+
