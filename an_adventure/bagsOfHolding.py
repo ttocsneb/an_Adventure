@@ -45,5 +45,5 @@ def look(item):
     if not item:
         print(f"You do not have a {item}.")
     else:
-        print(f"It's a sort of {obj.colour}-ish colour.")
+        print(f"It's a sort of {obj.colour}-ish colour")
         print(f"And it's about {obj.size}")
