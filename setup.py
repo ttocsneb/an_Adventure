@@ -11,6 +11,7 @@ INSTALL_REQUIRES = [
 	'adventurelib==1.2',
 	'marshmallow==2.18.1',
     'windows-curses ; platform_system=="Windows"',
+    'pyreadline ; platform_system=="Windows"'
 ]
 
 
@@ -18,7 +19,7 @@ def params():
 
 	name = "An Adventure"
 
-	version = "0.0.1"
+	version = "0.0.2"
 
 	description = "A text based adventure game"
 
