@@ -10,8 +10,9 @@ with open('README.md', 'r') as fh:
 INSTALL_REQUIRES = [
 	'adventurelib==1.2',
 	'marshmallow==2.18.1',
+    'pymaybe==0.1.6',
     'windows-curses ; platform_system=="Windows"',
-    'pyreadline ; platform_system=="Windows"'
+    'pyreadline ; platform_system=="Windows"',
 ]
 
 

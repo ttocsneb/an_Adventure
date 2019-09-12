@@ -23,15 +23,15 @@ def bootstrap():
         time.sleep(.7)
 
     for _ in range(num_chars):
-        print(chr(random.randint(0, 255)), end='', flush=True)
-        time.sleep((random.random() * 0.3) ** 2)
+        print(chr(random.randint(0x20, 254)), end='', flush=True)
+        time.sleep((random.random() * 0.2) ** 2)
     
     printSlow("Welcome to the terminal\n")
     printSlow("- on v178.4.0-starthread")
     printSlow("-> screenfetch\n")
 
     passphrase = input("Enter the passphrase.\n")
-    while passphrase != "Fuck You":
+    while passphrase.lower() != "bar":
         passphrase = input("Enter the passphrase.\n")
     printSlow("__Access__Granted__\n\n\n")
 

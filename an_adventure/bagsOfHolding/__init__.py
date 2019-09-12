@@ -2,24 +2,29 @@ import adventurelib
 from adventurelib import say, when, Bag, Item
 import time
 import random
-from . import commands
+from .. import commands
+from pymaybe import maybe
 
-dick = Item('dick', 'moby huge')
-dick.colour = 'black'
-dick.size = '3 feet tall'
-paste = Item('Toothpaste (colgate)', 'toothpaste')
-paste.colour = 'nebula'
+from . import schema
+
+itemconfig = schema.loadItems()
 
 inventory = Bag()
-testRoom = Bag([dick, paste])
+testRoom = Bag(itemconfig.items)
 
 @when ('eat ITEM')
 def eat(item):
-    obj = inventory.take(item)
+    obj = inventory.find(item)
     if not obj:
         print(f'You do not have a {item}.')
-    else:
+    elif maybe(obj).edible == True:
+        inventory.take(item)
         print(f'You eat the {obj}.')
+    else:
+        try:
+            print(obj.eat_fail)
+        except AttributeError:
+            print(f'You can\'t eat the {obj}')
 
 @when('inventory')
 def show_inventory():
@@ -41,9 +46,12 @@ def take(item):
 
 @when('look at ITEM')
 def look(item):
-    obj = inventory.find(item)
-    if not item:
+    obj = maybe(inventory.find(item))
+    if obj.is_none():
         print(f"You do not have a {item}.")
     else:
-        print(f"It's a sort of {obj.colour}-ish colour")
-        print(f"And it's about {obj.size}")
+        if obj.color.is_some():
+            print(f"It's a sort of {obj.colour}-ish colour")
+        if obj.size.is_some():
+            print(f"it's about {obj.size}")
+        
