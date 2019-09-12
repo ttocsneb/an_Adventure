@@ -67,7 +67,7 @@ def loadItems() -> ItemConfig:
 
     schema = ItemConfigSchema()
 
-    config_path = os.path.join(d(d(d(__file__))), "items.json")
+    config_path = os.path.join(d(__file__), "items.json")
 
     with open(config_path) as file:
         conf_obj = dict(

@@ -30,9 +30,9 @@ def bootstrap():
     printSlow("- on v178.4.0-starthread")
     printSlow("-> screenfetch\n")
 
-    passphrase = input("Enter the passphrase.\n")
-    while passphrase.lower() != "bar":
-        passphrase = input("Enter the passphrase.\n")
+    global callSign
+    callSign = input("Enter your Call Sign.\n")
+    
     printSlow("__Access__Granted__\n\n\n")
 
 
@@ -40,10 +40,3 @@ def start():
     bootstrap()
     adventurelib.start()
     # curses.wrapper(main)
-
-
-
-
-
-
-
