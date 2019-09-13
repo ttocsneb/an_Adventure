@@ -20,5 +20,14 @@
             "color": "nebula",
             "edible": true
         }
+    },
+    {
+        "names":[
+            "terminal",
+            "computer"
+        ],
+        "attrs":{
+            "color":"dark grey"
+        }
     }
 ]

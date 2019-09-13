@@ -7,6 +7,15 @@ from . import commands, gamedata, schemas
 import random
 import re
 
+def no_command_matches(command):
+    print(random.choice([
+        'Your command is unknown.',
+        'I am unsure what you are atempting to do.',
+        "\033[1;31;40m Perhaps rephrase that into something more intelligable. \n"
+    ]))
+
+adventurelib.no_command_matches = no_command_matches
+
 def printSlow(value, *args, **kwargs):
     value = str(value)
     for char in value:
