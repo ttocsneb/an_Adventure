@@ -4,6 +4,8 @@ import json
 from marshmallow import Schema, fields, post_load, pre_dump
 import adventurelib
 
+from .. import schemas
+
 
 class ItemConfig:
     def __init__(self, items: list):
@@ -11,30 +13,6 @@ class ItemConfig:
 
     def __repr__(self):
         return f"<ItemConfig(items={self.items})>"
-
-
-"""
-{
-    "names": [
-        "Main Name",
-        "alias Name 1",
-        "alias Name 2"
-    ],
-    "attrs": {
-        "edible": true,
-    }
-}
-"""
-class ItemSchema(Schema):
-    names = fields.List(fields.String())
-    attrs = fields.Dict()
-
-    @post_load
-    def createItem(self, data):
-        item = adventurelib.Item(*data['names'])
-        for attr, value in data['attrs'].items():
-            setattr(item, attr, value)
-        return item
 
 
 """
@@ -55,7 +33,7 @@ class ItemSchema(Schema):
 ]
 """
 class ItemConfigSchema(Schema):
-    items = fields.Nested(ItemSchema, many=True)
+    items = fields.Nested(schemas.ItemSchema, many=True)
 
     @post_load
     def createItemConfig(self, data: dict):

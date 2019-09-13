@@ -5,12 +5,13 @@ import random
 from .. import commands
 from pymaybe import maybe
 
-from . import schema
+from . import items
 
-itemconfig = schema.loadItems()
+config = items.loadItems()
 
 inventory = Bag()
-testRoom = Bag(itemconfig.items)
+testRoom = Bag(config.items)
+
 
 @when ('eat ITEM')
 def eat(item):
@@ -26,6 +27,7 @@ def eat(item):
         except AttributeError:
             print(f'You can\'t eat the {obj}')
 
+
 @when('inventory')
 def show_inventory():
     print('You have:')
@@ -34,6 +36,7 @@ def show_inventory():
         return
     for item in inventory:
         print(f'* {item}')
+
 
 @when("take ITEM")
 def take(item):
@@ -44,6 +47,7 @@ def take(item):
         inventory.add(obj)
         print(f'You have taken a {obj}.')
 
+
 @when('look at ITEM')
 def look(item):
     obj = maybe(inventory.find(item))
@@ -51,7 +55,7 @@ def look(item):
         print(f"You do not have a {item}.")
     else:
         if obj.color.is_some():
-            print(f"It's a sort of {obj.colour}-ish colour")
+            print(f"It's a sort of {obj.color}-ish colour")
         if obj.size.is_some():
             print(f"it's about {obj.size}")
         
