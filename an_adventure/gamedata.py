@@ -18,6 +18,9 @@ class GameData:
         self.player = player
         self.rooms = rooms
         self.callsign = callsign
+    
+    def save(self):
+        saveGameData(self)
 
 
 class GameDataSchema(Schema):
@@ -41,6 +44,7 @@ def loadGameData(callsign: str) -> GameData:
         with open(path.join(_game_data_file, name_cipher.encodeStr(callsign) + '.json')) as file:
             schema = GameDataSchema()
             file_json = json.load(file)
+            file_json['callsign'] = callsign
             game_data = schema.load(file_json)
     except OSError:
         return None

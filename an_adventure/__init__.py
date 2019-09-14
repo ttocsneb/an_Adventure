@@ -3,7 +3,7 @@
 import adventurelib
 from adventurelib import say
 import time
-from . import commands, gamedata, schemas
+from . import commands, gamedata, schemas, globalvars
 import random
 import re
 
@@ -52,16 +52,17 @@ def bootstrap():
             continue
         valid_name = True
 
-        data = gamedata.loadGameData(callSign)
-        if data is None:
+        globalvars.save_data = gamedata.loadGameData(callSign)
+        if globalvars.save_data is None:
             printSlow("Creating account.....")
-            data = gamedata.GameData(schemas.objects.Player(list()), list(), callSign)
-            gamedata.saveGameData(data)
+            globalvars.save_data = gamedata.GameData(schemas.objects.Player(list()), list(), callSign)
+            globalvars.save_data.save()
     
     printSlow("__Access__Granted__\n\n\n")
 
 
 def start():
+    from .bagsOfHolding import items
+    globalvars.items = items.loadItems().items
     bootstrap()
     adventurelib.start()
-    # curses.wrapper(main)

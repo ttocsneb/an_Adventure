@@ -34,6 +34,7 @@ class ItemConfig:
 """
 class ItemConfigSchema(Schema):
     items = fields.Nested(schemas.ItemSchema, many=True)
+    rooms = fields.Nested(schemas.RoomSchema, many=True)
 
     @post_load
     def createItemConfig(self, data: dict):
@@ -51,7 +52,8 @@ def loadItems() -> ItemConfig:
         conf_obj = dict(
             items=json.load(file)
         )
-        config = schema.load(conf_obj)
+
+    config = schema.load(conf_obj)
     if config.errors:
         err_msg = ''.join(f'{k}: {", ".join(i for i in v)}' for k, v in config.errors.items())
         raise RuntimeError(f"Couldn't parse items.json\n{err_msg}")

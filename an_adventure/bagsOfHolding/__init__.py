@@ -6,20 +6,16 @@ from .. import commands
 from pymaybe import maybe
 
 from . import items
-
-config = items.loadItems()
-
-inventory = Bag()
-testRoom = Bag(config.items)
+from .. import globalvars
 
 
 @when ('eat ITEM')
 def eat(item):
-    obj = inventory.find(item)
+    obj = globalvars.save_data.player.find(item)
     if not obj:
         print(f'You do not have a {item}.')
     elif maybe(obj).edible == True:
-        inventory.take(item)
+        globalvars.save_data.player.take(item)
         print(f'You eat the {obj}.')
     else:
         try:
@@ -29,28 +25,28 @@ def eat(item):
 
 
 @when('inventory')
-def show_inventory():
+def inventory():
     print('You have:')
-    if not inventory:
+    if not globalvars.save_data.player:
         print('nothing')
         return
-    for item in inventory:
+    for item in globalvars.save_data.player:
         print(f'* {item}')
 
 
-@when("take ITEM")
-def take(item):
-    obj = testRoom.take(item)
-    if not obj:
-        print(f'there is no {item} here')
-    else:
-        inventory.add(obj)
-        print(f'You have taken a {obj}.')
+# @when("take ITEM")
+# def take(item):
+#     obj = testRoom.take(item)
+#     if not obj:
+#         print(f'there is no {item} here')
+#     else:
+#         globalvars.save_data.player.add(obj)
+#         print(f'You have taken a {obj}.')
 
 
 @when('look at ITEM')
 def look(item):
-    obj = maybe(inventory.find(item))
+    obj = maybe(globalvars.save_data.player.find(item))
     if obj.is_none():
         print(f"You do not have a {item}.")
     else:
