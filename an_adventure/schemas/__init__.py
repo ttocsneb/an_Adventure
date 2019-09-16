@@ -56,7 +56,7 @@ class PlayerSchema(Schema):
 
 
 class RoomSchema(Schema):
-
+    
     items = fields.List(ItemReference(lambda: globalvars.items))
 
     @post_load

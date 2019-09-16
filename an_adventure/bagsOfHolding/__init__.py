@@ -34,14 +34,14 @@ def inventory():
         print(f'* {item}')
 
 
-# @when("take ITEM")
-# def take(item):
-#     obj = testRoom.take(item)
-#     if not obj:
-#         print(f'there is no {item} here')
-#     else:
-#         globalvars.save_data.player.add(obj)
-#         print(f'You have taken a {obj}.')
+@when("take ITEM")
+def take(item):
+    obj = globalvars.save_data.current_room.take(item)
+    if not obj:
+        print(f'there is no {item} here')
+    else:
+        globalvars.save_data.player.add(obj)
+        print(f'You have taken a {obj}.')
 
 
 @when('look at ITEM')

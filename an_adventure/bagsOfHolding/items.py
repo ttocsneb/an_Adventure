@@ -34,7 +34,6 @@ class ItemConfig:
 """
 class ItemConfigSchema(Schema):
     items = fields.Nested(schemas.ItemSchema, many=True)
-    rooms = fields.Nested(schemas.RoomSchema, many=True)
 
     @post_load
     def createItemConfig(self, data: dict):

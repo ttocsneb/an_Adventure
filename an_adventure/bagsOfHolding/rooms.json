@@ -1,0 +1,18 @@
+[
+    {
+        "name": "Terminal (test) Room",
+        "description": "Broken glass reflects the flourescent blue light of the text on the flickering terminal...",
+        "attrs":{
+            "can_scream": "true"
+        },
+        "items":[
+            "dick"
+        ],
+        "directions":{
+            "exit": "Elevator"
+        }
+    },
+    {
+        "name": "Elevator"
+    }
+]

@@ -1,5 +1,6 @@
 # import curses
 # https://docs.python.org/3/howto/curses.html
+import os
 import adventurelib
 from adventurelib import say
 import time
@@ -27,7 +28,7 @@ def bootstrap():
     num_chars = random.randint(50, 150)
     # num_chars= 20000
 
-    printSlow("Last login: somedate.exe")
+    printSlow(f"Last login: {gamedata.timeStamp}")
     for _ in range(3):
         print('.')
         time.sleep(.7)
@@ -57,6 +58,7 @@ def bootstrap():
             printSlow("Creating account.....")
             globalvars.save_data = gamedata.GameData(schemas.objects.Player(list()), list(), callSign)
             globalvars.save_data.save()
+            globalvars.save_data.current_room = "Terminal (test) Room" #TODO change to reference
     
     printSlow("__Access__Granted__\n\n\n")
 

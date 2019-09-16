@@ -2,6 +2,7 @@ from marshmallow import Schema, fields, post_load
 from os import path
 import json
 import adventurelib
+import time
 
 from os.path import dirname as d
 import os
@@ -9,6 +10,7 @@ import os
 from . import schemas, cipher
 
 _game_data_file = path.join(d(d(__file__)), 'saves')
+timeStamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(os.path.getmtime(_game_data_file)))
 if not path.isdir(_game_data_file):
     os.mkdir(_game_data_file)
 
@@ -24,6 +26,7 @@ class GameData:
 
 
 class GameDataSchema(Schema):
+    current_room = fields.String() #TODO make current_room a room reference
     player = fields.Nested(schemas.PlayerSchema)
     rooms = fields.Nested(schemas.RoomSchema, many=True)
     callsign = fields.String()
