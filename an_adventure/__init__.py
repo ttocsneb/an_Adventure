@@ -1,6 +1,7 @@
 # import curses
 # https://docs.python.org/3/howto/curses.html
 import os
+import colorama
 import adventurelib
 from adventurelib import say
 import time
@@ -64,6 +65,7 @@ def bootstrap():
 
 
 def start():
+    colorama.init()
     from .bagsOfHolding import items
     globalvars.items = items.loadItems().items
     bootstrap()
