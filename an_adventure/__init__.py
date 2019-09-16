@@ -2,6 +2,7 @@
 # https://docs.python.org/3/howto/curses.html
 import os
 import colorama
+from colorama import Fore
 import adventurelib
 from adventurelib import say
 import time
@@ -13,7 +14,7 @@ def no_command_matches(command):
     print(random.choice([
         'Your command is unknown.',
         'I am unsure what you are atempting to do.',
-        "\033[1;31;40m Perhaps rephrase that into something more intelligable. \n"
+        Fore.RED + "Perhaps rephrase that into something more intelligable. \n" + Fore.RESET
     ]))
 
 adventurelib.no_command_matches = no_command_matches
@@ -25,22 +26,24 @@ def printSlow(value, *args, **kwargs):
         time.sleep((random.random() * .3) ** 2)
     print('')
 
-def bootstrap():
+def bootstrap(skipIntro=False):
     num_chars = random.randint(50, 150)
     # num_chars= 20000
 
-    printSlow(f"Last login: {gamedata.timeStamp}")
-    for _ in range(3):
-        print('.')
-        time.sleep(.7)
+    if not skipIntro:
 
-    for _ in range(num_chars):
-        print(chr(random.randint(0x20, 254)), end='', flush=True)
-        time.sleep((random.random() * 0.2) ** 2)
-    
-    printSlow("Welcome to the terminal\n")
-    printSlow("- on v178.4.0-starthread")
-    printSlow("-> screenfetch\n")
+        printSlow(f"Last login: {gamedata.timeStamp}")
+        for _ in range(3):
+            print('.')
+            time.sleep(.7)
+
+        for _ in range(num_chars):
+            print(chr(random.randint(0x20, 254)), end='', flush=True)
+            time.sleep((random.random() * 0.2) ** 2)
+        
+        printSlow("Welcome to the terminal\n")
+        printSlow("- on v178.4.0-starthread")
+        printSlow("-> screenfetch\n")
 
     callsign_pattern = re.compile(r"[^a-z0-9_\- ]+")
 
@@ -64,9 +67,9 @@ def bootstrap():
     printSlow("__Access__Granted__\n\n\n")
 
 
-def start():
-    colorama.init()
+def start(skipIntro=False):
     from .bagsOfHolding import items
+    colorama.init()
     globalvars.items = items.loadItems().items
-    bootstrap()
+    bootstrap(skipIntro)
     adventurelib.start()

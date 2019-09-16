@@ -11,6 +11,7 @@ INSTALL_REQUIRES = [
 	'adventurelib==1.2',
 	'marshmallow==2.18.1',
     'pymaybe==0.1.6',
+	'colorama==0.4.1',
     'windows-curses ; platform_system=="Windows"',
     'pyreadline ; platform_system=="Windows"',
 ]
@@ -48,7 +49,7 @@ def params():
 
 	entry_points = {
 		'console_scripts': [
-			'anAdventure = an_adventure:start'
+			'anAdventure = an_adventure.__main__:main'
 		]
 	}
 
