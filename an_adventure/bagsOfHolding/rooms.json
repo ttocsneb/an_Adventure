@@ -1,18 +1,19 @@
 [
     {
-        "name": "Terminal (test) Room",
-        "description": "Broken glass reflects the flourescent blue light of the text on the flickering terminal...",
+        "name": "terminal",
+        "desc": "Broken glass reflects the fluorescent blue light of the text on the flickering terminal...",
         "attrs":{
             "can_scream": "true"
         },
         "items":[
-            "dick"
+            "moby huge"
         ],
-        "directions":{
-            "exit": "Elevator"
+        "exits": {
+            "south": "elevator"
         }
     },
     {
-        "name": "Elevator"
+        "name": "elevator",
+        "desc": "This is an elevator"
     }
 ]

@@ -1,9 +1,8 @@
-from marshmallow import fields, Schema, post_load
+from marshmallow import fields, Schema, post_load, pre_dump, post_dump, ValidationError
 import adventurelib
 from pymaybe import maybe
 
 from . import objects
-from .. import globalvars
 
 class ItemSchema(Schema):
     names = fields.List(fields.String())
@@ -22,33 +21,54 @@ class ItemReference(fields.Field):
         dne="Item '{}' does not exist.", badobj="Invalid item object."
     )
 
-    def __init__(self, items: list, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self._items = items
-    
     def _serialize(self, value: adventurelib.Item, attr, obj, **kwargs):
         if hasattr(value, "name"):
             return str(value.name)
-        name = maybe(value).get('name')
+        name = maybe(value)['name']
+        if name is None:
+            self.fail("badobj")
+        return str(name)
+
+    def _deserialize(self, value: str, attr, obj, **kwargs):
+        # def get_items():
+        #     if callable(self._items):
+        #         return self._items()
+        #     return self._items
+        # item = next((v for v in get_items() if v.name == value), None)
+        # if item is None:
+        #     self.fail("dne", name=value)
+        return str(value)
+
+
+class RoomReference(fields.Field):
+    default_error_messages = dict(
+        badobj="Invalid room object."
+    )
+
+    def _serialize(self, value: objects.Room, attr, obj, **kwargs):
+        if value is None:
+            return None
+        if isinstance(value, str):
+            return value
+        if hasattr(value, "name"):
+            return str(value.name)
+        name = maybe(value)['name']
+
         if name is None:
             self.fail("badobj")
         return str(name)
     
-    def _deserialize(self, value: str, attr, obj, **kwargs):
-        def get_items():
-            if callable(self._items):
-                return self._items()
-            return self._items
-        item = next((v for v in get_items() if v.name == value), None)
-        if item is None:
-            self.fail("dne", name=value)
-        return item
+    def _deserialize(self, value, attr, obj, **kwargs):
+        return str(value)
 
 
 class PlayerSchema(Schema):
 
-    items = fields.List(ItemReference(lambda: globalvars.items))
+    items = fields.List(ItemReference())
+
+    @pre_dump
+    def loadPlayer(self, data: objects.Player):
+        return dict(items=list(data))
 
     @post_load
     def createPlayer(self, data):
@@ -57,7 +77,22 @@ class PlayerSchema(Schema):
 
 class RoomSchema(Schema):
     
-    items = fields.List(ItemReference(lambda: globalvars.items))
+    items = fields.List(ItemReference())
+    name = fields.String()
+    desc = fields.String()
+    attrs = fields.Dict()
+    exits = fields.Dict()
+
+    @post_dump
+    def loadRoom(self, data: dict):
+        def get_name(obj):
+            if isinstance(obj, str):
+                return obj
+            if isinstance(obj, objects.Room):
+                return obj.name
+            raise ValidationError(f"type {type(obj)} is not a Room")
+        data['exits'] = dict((k, get_name(v)) for k, v in data['exits'].items())
+        return data
 
     @post_load
     def createRoom(self, data):

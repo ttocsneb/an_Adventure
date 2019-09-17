@@ -1,12 +1,10 @@
+from .bagsOfHolding import items as itemConfig, rooms as roomConfig
+from . import gamedata
 
-save_data = None
 
-items = None
+# Create an empty gamedata object for pylinter
+save_data = gamedata.GameData("")
 
-def set_items(value):
-    global items
-    items = value
+items = itemConfig.loadItems().items
 
-def set_save_data(value):
-    global save_data
-    save_data = value
+rooms = roomConfig.loadRooms().rooms

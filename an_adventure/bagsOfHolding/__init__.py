@@ -36,7 +36,7 @@ def inventory():
 
 @when("take ITEM")
 def take(item):
-    obj = globalvars.save_data.current_room.take(item)
+    obj = globalvars.save_data.current_room.items.take(item)
     if not obj:
         print(f'there is no {item} here')
     else:

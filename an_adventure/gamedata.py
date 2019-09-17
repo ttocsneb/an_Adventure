@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields, post_load
+from marshmallow import Schema, fields, post_load, ValidationError
 from os import path
 import json
 import adventurelib
@@ -16,17 +16,49 @@ if not path.isdir(_game_data_file):
 
 
 class GameData:
-    def __init__(self, player: schemas.objects.Player, rooms: list, callsign: str):
-        self.player = player
-        self.rooms = rooms
+    def __init__(self, callsign: str, player: schemas.objects.Player = None, rooms: list = None, current_room: str = None):
         self.callsign = callsign
+        self.player = player or schemas.objects.Player()
+        self.rooms = rooms or list()
+
+        for room in self.rooms:
+            room._load_exits(self.rooms)
+
+        if current_room is not None:
+            self.current_room = current_room
+        else:
+            self._current_room = None
     
+    @property
+    def current_room(self):
+        return self._current_room
+    
+    @current_room.setter
+    def current_room(self, value):
+        if isinstance(value, schemas.objects.Room):
+            self._current_room = value
+            return
+        if isinstance(value, str):
+            room = self.getRoom(value)
+            if room is not None:
+                self._current_room = room
+                return
+            print(self.rooms)
+        raise KeyError(f"Could not find the room '{value}'")
+
+    def getRoom(self, name, default=None):
+        try:
+            return next(r for r in self.rooms if r.name == name)
+        except StopIteration:
+            pass
+        return default
+
     def save(self):
         saveGameData(self)
 
 
 class GameDataSchema(Schema):
-    current_room = fields.String() #TODO make current_room a room reference
+    current_room = schemas.RoomReference()
     player = fields.Nested(schemas.PlayerSchema)
     rooms = fields.Nested(schemas.RoomSchema, many=True)
     callsign = fields.String()
@@ -37,7 +69,11 @@ class GameDataSchema(Schema):
 
 
 def getErrorString(errors):
-    return ''.join(f'{k}: {", ".join(i for i in v)}' for k, v in errors.items())
+    def to_str(obj):
+        if isinstance(obj, dict):
+            return ', '.join(f'{v}' for k, v in obj.items())
+        return ', '.join(i for i in obj)
+    return ''.join(f'{k}: {to_str(v)}' for k, v in errors.items())
 
 
 def loadGameData(callsign: str) -> GameData:
@@ -54,6 +90,7 @@ def loadGameData(callsign: str) -> GameData:
 
     if game_data.errors:
         errs = getErrorString(game_data.errors)
+        print(game_data.errors)
         raise RuntimeError(f"Could not load gamedata:\n{errs}")
 
     return game_data.data

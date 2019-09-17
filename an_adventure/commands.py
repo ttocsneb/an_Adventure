@@ -19,7 +19,7 @@ def brush_teeth():
             run your tongue over them.
         """)
 
-@when('exit', direction = 'exit')
+@when('exit DIRECTION')
 def go(direction):
     room = globalvars.save_data.current_room.exit(direction)
     if room:
@@ -27,3 +27,7 @@ def go(direction):
         print(f'You go {direction}')
         #look()
 
+@when('save')
+def save():
+    globalvars.save_data.save()
+    print('I have saved your progress')

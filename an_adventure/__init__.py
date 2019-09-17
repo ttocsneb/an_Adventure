@@ -14,7 +14,7 @@ def no_command_matches(command):
     print(random.choice([
         'Your command is unknown.',
         'I am unsure what you are atempting to do.',
-        Fore.RED + "Perhaps rephrase that into something more intelligable. \n" + Fore.RESET
+        Fore.RED + "Perhaps rephrase that into something more intelligable." + Fore.RESET
     ]))
 
 adventurelib.no_command_matches = no_command_matches
@@ -60,9 +60,9 @@ def bootstrap(skipIntro=False):
         globalvars.save_data = gamedata.loadGameData(callSign)
         if globalvars.save_data is None:
             printSlow("Creating account.....")
-            globalvars.save_data = gamedata.GameData(schemas.objects.Player(list()), list(), callSign)
+            globalvars.save_data = gamedata.GameData(callSign, rooms=globalvars.rooms)
+            globalvars.save_data.current_room = "terminal"
             globalvars.save_data.save()
-            globalvars.save_data.current_room = "Terminal (test) Room" #TODO change to reference
     
     printSlow("__Access__Granted__\n\n\n")
 
@@ -70,6 +70,5 @@ def bootstrap(skipIntro=False):
 def start(skipIntro=False):
     from .bagsOfHolding import items
     colorama.init()
-    globalvars.items = items.loadItems().items
     bootstrap(skipIntro)
     adventurelib.start()

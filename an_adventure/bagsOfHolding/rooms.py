@@ -13,51 +13,23 @@ class RoomConfig:
         return f"<RoomConfig(rooms={self.rooms})>"
 
 
-
 """
 [
     {
-        "name": "room name"
-    },
-    {
         "name": "room name",
-        "description": "room description"
-    }
-    {
-        "name": "room name",
-        "description": "room description",
-        "attrs": {
-            "bar": "foo"
-        }
-    },
-    {
-        "name": "room name",
-        "description": "room description",
-        "attrs":{
-            "bar": "foo"
-        },
-        "items": [
-            "item name"
-        ]
-    },
-    {
-        "name": "room name",
-        "description": "room description",
+        "desc": "room description",
         "attrs": {
             "bar": "foo"
         },
         "items": [
             "item name"
         ],
-        "directions": {
+        "exits": {
             "direction": "room"
         }
     }
 ]
 """
-
-
-
 class RoomsConfigSchema(Schema):
     rooms = fields.Nested(schemas.RoomSchema, many=True)
 
@@ -66,7 +38,7 @@ class RoomsConfigSchema(Schema):
         return RoomConfig(**data)
 
 
-def loadItems() -> RoomConfig:
+def loadRooms() -> RoomConfig:
     from os.path import dirname as d
 
     schema = RoomsConfigSchema()
@@ -80,6 +52,6 @@ def loadItems() -> RoomConfig:
 
     config = schema.load(conf_obj)
     if config.errors:
-        err_msg = ''.join(f'{k}: {", ".join(i for i in v)}' for k, v in config.errors.rooms())
+        err_msg = ''.join(f'{k}: {", ".join(i for i in v)}' for k, v in config.errors.items())
         raise RuntimeError(f"Couldn't parse rooms.json\n{err_msg}")
     return config.data
