@@ -1,4 +1,6 @@
 import adventurelib
+import colorama
+from colorama import Fore
 from adventurelib import say, when, Bag, Item
 import time
 import random
@@ -25,9 +27,14 @@ def go(direction):
     if room:
         globalvars.save_data.current_room = room
         print(f'You go {direction}')
-        #look()
+        look()
 
 @when('save')
 def save():
     globalvars.save_data.save()
-    print('I have saved your progress')
+    print(Fore.CYAN + 'I have saved your progress' + Fore.RESET)
+
+
+@when('look')
+def look():
+    print(globalvars.save_data.current_room.desc)

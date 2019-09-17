@@ -12,8 +12,8 @@ import re
 
 def no_command_matches(command):
     print(random.choice([
-        'Your command is unknown.',
-        'I am unsure what you are atempting to do.',
+        Fore.CYAN + 'Your command is unknown.' + Fore.RESET,
+        Fore.CYAN + 'I am unsure what you are atempting to do.' + Fore.RESET,
         Fore.RED + "Perhaps rephrase that into something more intelligable." + Fore.RESET
     ]))
 
@@ -27,8 +27,21 @@ def printSlow(value, *args, **kwargs):
     print('')
 
 def bootstrap(skipIntro=False):
-    num_chars = random.randint(50, 150)
-    # num_chars= 20000
+    num_chars = random.randint(250, 350)
+    if os.name == "nt":
+        os.system('cls')
+    else: 
+        os.system('clear') 
+
+    if gamedata.file_count <= 1: #TODO create cheat code save
+        print("""You awake, your head aching.\n Getting up, you take in an unfamiliar surrounding, 
+        and a terminal clicks to life directly in front of you.\n
+        Random characters crawl accross its screen as it struggles to make sense of itself. \n\n""")
+        input("(press enter)")
+    if os.name == "nt":
+        os.system('cls')
+    else: 
+        os.system('clear')    
 
     if not skipIntro:
 
@@ -42,8 +55,28 @@ def bootstrap(skipIntro=False):
             time.sleep((random.random() * 0.2) ** 2)
         
         printSlow("Welcome to the terminal\n")
-        printSlow("- on v178.4.0-starthread")
-        printSlow("-> screenfetch\n")
+        print("- on" + Fore.CYAN + " v178.4.0-st" + Fore.RESET)
+        print(Fore.LIGHTBLACK_EX + "->screenfetch\n" + Fore.RESET)
+        print(Fore.CYAN + """               ||
+               ||
+          ||   ||  ||
+          ||   |╚==||=======╗|         Terranc3@Terminal3
+          ||       ||       ||         OS: """ + Fore.RESET + """StarThread"""+Fore.CYAN+"""
+          ||       ||       ||         Kernel: """+Fore.RESET+"""x172_86 StarThread 178.4.0-1-ION"""+Fore.CYAN+"""
+          |╚============ ■  ||         Downtime: """+Fore.RESET+"""1h 47m"""+Fore.CYAN+"""
+                   ||       ||         Packages: """+Fore.RESET+"""553"""+Fore.CYAN+"""
+                   |╚=======||         Shell: """+Fore.RESET+"""bjh 9.3.7"""+Fore.CYAN+"""
+                    ████████||         Resolution: """+Fore.RESET+"""1920x1080"""+Fore.CYAN+""" 
+                    ████████|/         WM: """+Fore.RESET+"""i6"""+Fore.CYAN+"""
+          ||        ███████//          Authorization: """+Fore.RESET+"""Active"""+Fore.CYAN+""" 
+   |╔=====╗|        ██████//           Power Supply: """+Fore.RESET+"""Limited"""+Fore.CYAN+""" 
+   ||     ||  =====||████//            Diagnostics: """+Fore.RESET+"""Functional"""+Fore.CYAN+""" 
+   ||     ||       ||███//             CPU: """+Fore.RESET+"""Quantum Core i9 980 @ 16x 44.816GHz [0.0°K]"""+Fore.CYAN+"""
+   ||     |╚====   ||██//              GPU: """+Fore.RESET+"""NEC µPD7220"""+Fore.CYAN+"""
+   ||              ||█//               RAM: """+Fore.RESET+"""6.2 Exabytes"""+Fore.CYAN+"""
+                   ||//
+                   \\|/
+                    V \n""")
 
     callsign_pattern = re.compile(r"[^a-z0-9_\- ]+")
 
