@@ -84,7 +84,7 @@ def bootstrap(skipIntro=False):
     while not valid_name:
         callSign = input("Enter your Call Sign.\n").lower()
 
-        if next(re.finditer(callsign_pattern, callSign), False):
+        if not callSign or next(re.finditer(callsign_pattern, callSign), False):
             print("Invalid CallSign!")
             print("Try again\n")
             continue
