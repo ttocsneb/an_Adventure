@@ -38,12 +38,13 @@ class RoomsConfigSchema(Schema):
         return RoomConfig(**data)
 
 
-def loadRooms() -> RoomConfig:
+def loadRooms(config_path=None) -> RoomConfig:
     from os.path import dirname as d
 
     schema = RoomsConfigSchema()
 
-    config_path = os.path.join(d(__file__), "rooms.json")
+    if not config_path:
+        config_path = os.path.join(d(__file__), "rooms.json")
 
     with open(config_path) as file:
         conf_obj = dict(
@@ -52,6 +53,6 @@ def loadRooms() -> RoomConfig:
 
     config = schema.load(conf_obj)
     if config.errors:
-        err_msg = ''.join(f'{k}: {", ".join(i for i in v)}' for k, v in config.errors.items())
+        err_msg = schemas.getErrorString(config.errors)
         raise RuntimeError(f"Couldn't parse rooms.json\n{err_msg}")
     return config.data

@@ -69,19 +69,13 @@ class GameDataSchema(Schema):
         return GameData(**data)
 
 
-def getErrorString(errors):
-    def to_str(obj):
-        if isinstance(obj, dict):
-            return ', '.join(f'{v}' for k, v in obj.items())
-        return ', '.join(i for i in obj)
-    return ''.join(f'{k}: {to_str(v)}' for k, v in errors.items())
-
-
-def loadGameData(callsign: str) -> GameData:
+def loadGameData(callsign: str, dir=None) -> GameData:
     name_cipher = cipher.Cipher(ord(callsign[-1]), cipher.cipher_file)
     
+    dir = dir or _game_data_file
+    
     try:
-        with open(path.join(_game_data_file, name_cipher.encodeStr(callsign) + '.json')) as file:
+        with open(path.join(dir, name_cipher.encodeStr(callsign) + '.json')) as file:
             schema = GameDataSchema()
             file_json = json.load(file)
             file_json['callsign'] = callsign
@@ -90,23 +84,24 @@ def loadGameData(callsign: str) -> GameData:
         return None
 
     if game_data.errors:
-        errs = getErrorString(game_data.errors)
+        errs = schemas.getErrorString(game_data.errors)
         print(game_data.errors)
         raise RuntimeError(f"Could not load gamedata:\n{errs}")
 
     return game_data.data
 
 
-def saveGameData(gameData: GameData):
+def saveGameData(gameData: GameData, dir=None):
     name_cipher = cipher.Cipher(ord(gameData.callsign[-1]), cipher.cipher_file)
     schema = GameDataSchema()
     data_dict = schema.dump(gameData)
     del data_dict.data['callsign']
 
+    dir = dir or _game_data_file
 
     if data_dict.errors:
-        errs = getErrorString(data_dict.errors)
+        errs = schemas.getErrorString(data_dict.errors)
         raise RuntimeError(f"Could not save gamedata:\n{errs}")
 
-    with open(path.join(_game_data_file, name_cipher.encodeStr(gameData.callsign) + '.json'), 'w') as file:
+    with open(path.join(dir, name_cipher.encodeStr(gameData.callsign) + '.json'), 'w') as file:
         json.dump(data_dict.data, file)

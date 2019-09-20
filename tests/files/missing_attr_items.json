@@ -1,0 +1,26 @@
+[
+    {
+        "names": [
+            "moby huge",
+            "dick"
+        ],
+        "attrs": {
+            "color": "black",
+            "size": "3 feet tall",
+            "edible": false,
+            "eat_fail": "You try to shove it down your throat, but it just doesn't fit"
+        }
+    },
+    {
+        "names": ["Toothpaste (colgate)"],
+        "attrs": {
+            "color": "nebula",
+            "edible": true
+        }
+    },
+    {
+        "names":[
+            "terminal"
+        ]
+    }
+]
