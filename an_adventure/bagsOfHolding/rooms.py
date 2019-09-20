@@ -24,12 +24,16 @@ class RoomConfig:
         "items": [
             "item name"
         ],
+        "item_desc": {
+            "item": "desc"
+        }
         "exits": {
             "direction": "room"
         }
     }
 ]
 """
+#TODO add item_desc so I can succ them into the look() command
 class RoomsConfigSchema(Schema):
     rooms = fields.Nested(schemas.RoomSchema, many=True)
 

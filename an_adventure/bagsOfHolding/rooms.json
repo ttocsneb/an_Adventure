@@ -1,6 +1,6 @@
 [
     {
-        "name": "terminal",
+        "name": "terminal room",
         "desc": "Broken glass reflects the fluorescent blue light of the text on the flickering terminal...",
         "attrs":{
             "can_scream": "true"

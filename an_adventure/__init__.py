@@ -19,9 +19,11 @@ def no_command_matches(command):
         Fore.CYAN + 'I am unsure what you are atempting to do.' + Fore.RESET,
         Fore.RED + "Perhaps rephrase that into something more intelligable." + Fore.RESET
     ]))
-
 adventurelib.no_command_matches = no_command_matches
 
+def prompt():
+    return  f'{Fore.CYAN}StarThreadCMD> '
+adventurelib.prompt = prompt
 
 def bootstrap(skipIntro=False):
     if os.name == "nt":
@@ -95,4 +97,4 @@ def start(skipIntro=False):
     from .bagsOfHolding import items
     colorama.init()
     bootstrap(skipIntro)
-    adventurelib.start()
+    adventurelib.start(help=False)
