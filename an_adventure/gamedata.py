@@ -10,6 +10,8 @@ import os
 from . import schemas, cipher
 
 _game_data_file = path.join(d(d(__file__)), 'saves')
+if not os.path.isdir(_game_data_file):
+    os.mkdir(_game_data_file)
 timeStamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(os.path.getmtime(_game_data_file)))
 file_count = len(os.listdir(_game_data_file))
 if not path.isdir(_game_data_file):
