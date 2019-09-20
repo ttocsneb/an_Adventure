@@ -4,12 +4,14 @@ import os
 import colorama
 from colorama import Fore
 import adventurelib
-from adventurelib import say
+from adventurelib import say, Room
 import time
 from . import commands, gamedata, schemas, globalvars
 from .util import printSlow, printSlowColor
 import random
 import re
+
+Room.add_direction('up', 'down')
 
 def no_command_matches(command):
     print(random.choice([
@@ -39,14 +41,14 @@ def bootstrap(skipIntro=False):
 
     if not skipIntro:
 
-        printSlow(f"Last login: {gamedata.timeStamp}", max=50, corrupt=True)
+        printSlow(f"Last login: {gamedata.timeStamp}", max=50)
         for _ in range(3):
             print('.')
             time.sleep(.7)
 
         printSlowColor("Welcome to the terminal\n- on",
                        Fore.CYAN, " v178.4.0.st\n",
-                       Fore.LIGHTBLACK_EX, "->screenfetch\n", Fore.RESET, max=50, corrupt=True)
+                       Fore.LIGHTBLACK_EX, "->screenfetch\n", Fore.RESET, max=50)
         printSlowColor(Fore.CYAN, """               ||
                ||
           ||   ||  ||
@@ -75,7 +77,7 @@ def bootstrap(skipIntro=False):
         callSign = input("Enter your Call Sign.\n").lower()
 
         if not callSign or next(re.finditer(callsign_pattern, callSign), False):
-            printSlowColor(Fore.RED, "Invalid CallSign!\n", Fore.RESET, corrupt=True)
+            printSlowColor(Fore.RED, "Invalid CallSign!\n", Fore.RESET)
             continue
         valid_name = True
 

@@ -14,6 +14,33 @@ def respond(obj, attr, default):
     else:
         print(default)
 
+@when ('put ITEM')
+def put(item):
+    obj = globalvars.save_data.player.find(item)
+    if not obj:
+        print(f'You do not have a {item}.')
+    elif maybe(obj).put_in.is_some() and globalvars.save_data.current_room.name in obj.put_in: 
+        respond(obj, 'room_put_succ', f'You place the {obj} in the {globalvars.save_data.current_room}')
+        globalvars.save_data.player.take(obj)
+        globalvars.save_data.current_room.add(obj)
+    else:
+        respond(obj, 'room_put_fail', f'You cannot put a {obj} here.')    
+
+@when ('put ITEM on TARGET')
+def puton(item, target):
+    obj = globalvars.save_data.player.find(item)
+    tarobj = globalvars.save_data.current_room.find(target)
+    if not obj: 
+        print(f'You do not have a {item}.')
+    elif not tarobj:
+        print(f'There is no {target} to put the {obj} on')
+    elif maybe(obj).put_on.is_some and tarobj.name in obj.put_on:
+        respond(obj, f'put_succ_{target}', f'You put the {obj} on the {tarobj}')
+        globalvars.save_data.player.take(obj)
+        #TODO make it so that the item actualy gets put on the target
+    else:
+        respond(obj, f'put_fail_{tarobj}', f'You can\'t put the {obj} on the {tarobj}')    
+
 
 @when ('eat ITEM')
 def eat(item):
@@ -77,13 +104,16 @@ def brush_teeth():
             run your tongue over them.
         """)
 
-@when('exit DIRECTION')
-def go(direction):
+@when('enter NEWROOM')
+def go(newroom):
+    direction = next((k for k, v in globalvars.save_data.current_room.exits.items() if v.name == newroom), None)
     room = globalvars.save_data.current_room.exit(direction)
     if room:
         globalvars.save_data.current_room = room
-        print(f'You go {direction}')
+        print(f'You go to the {room.name}')
         look()
+    else:
+        print("Looks like that's not a valid option at the momment.")    
 
 @when('save')
 def save():
@@ -94,3 +124,10 @@ def save():
 @when('look')
 def look():
     print(globalvars.save_data.current_room.desc)
+    print("There is:")
+    if not globalvars.save_data.current_room:
+        print('nothing')
+        return
+    for item in globalvars.save_data.current_room.items:
+        print(f'a {item}')
+    print(f'In the {globalvars.save_data.current_room.name}')    

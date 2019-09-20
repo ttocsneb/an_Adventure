@@ -14,6 +14,13 @@
     },
     {
         "name": "elevator",
-        "desc": "This is an elevator"
+        "desc": "This is an elevator",
+        "exits": {
+            "down": "b-level"
+        }
+    },
+    {
+        "name": "b-level",
+        "desc": "The elevator stops on the lower level"
     }
 ]
