@@ -1,0 +1,18 @@
+[
+    {
+        "desc": "Broken glass reflects the fluorescent blue light of the text on the flickering terminal...",
+        "attrs":{
+            "can_scream": "true"
+        },
+        "items":[
+            "moby huge"
+        ],
+        "exits": {
+            "south": "elevator"
+        }
+    },
+    {
+        "name": "elevator",
+        "desc": "This is an elevator"
+    }
+]

@@ -4,9 +4,18 @@ from pymaybe import maybe
 
 from . import objects
 
+
+def getErrorString(errors):
+    def to_str(obj):
+        if isinstance(obj, dict):
+            return ', '.join(f'{v}' for k, v in obj.items())
+        return ', '.join(i for i in obj)
+    return ''.join(f'{k}: {to_str(v)}' for k, v in errors.items())
+
+
 class ItemSchema(Schema):
-    names = fields.List(fields.String())
-    attrs = fields.Dict()
+    names = fields.List(fields.String(), required=True)
+    attrs = fields.Dict(missing=dict())
 
     @post_load
     def createItem(self, data):
@@ -77,9 +86,9 @@ class PlayerSchema(Schema):
 
 class RoomSchema(Schema):
     
+    name = fields.String(required=True)
+    desc = fields.String(required=True)
     items = fields.List(ItemReference())
-    name = fields.String()
-    desc = fields.String()
     attrs = fields.Dict()
     exits = fields.Dict()
 

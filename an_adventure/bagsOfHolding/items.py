@@ -40,12 +40,13 @@ class ItemConfigSchema(Schema):
         return ItemConfig(**data)
 
 
-def loadItems() -> ItemConfig:
+def loadItems(config_path=None) -> ItemConfig:
     from os.path import dirname as d
 
     schema = ItemConfigSchema()
 
-    config_path = os.path.join(d(__file__), "items.json")
+    if not config_path:
+        config_path = os.path.join(d(__file__), "items.json")
 
     with open(config_path) as file:
         conf_obj = dict(
@@ -54,6 +55,6 @@ def loadItems() -> ItemConfig:
 
     config = schema.load(conf_obj)
     if config.errors:
-        err_msg = ''.join(f'{k}: {", ".join(i for i in v)}' for k, v in config.errors.items())
+        err_msg = schemas.getErrorString(config.errors)
         raise RuntimeError(f"Couldn't parse items.json\n{err_msg}")
     return config.data
