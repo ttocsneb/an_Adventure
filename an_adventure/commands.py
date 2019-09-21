@@ -106,7 +106,10 @@ def brush_teeth():
 
 @when('enter NEWROOM')
 def go(newroom):
-    direction = next((k for k, v in globalvars.save_data.current_room.exits.items() if v.name == newroom), None)
+    direction = next((k for k, v in globalvars.save_data.current_room.exits.items() if v.name.startswith(newroom.replace('the ', ''))), None)
+    if direction is None:
+        print(f"You can't go there, {newroom} isn't a room")
+        return
     room = globalvars.save_data.current_room.exit(direction)
     if room:
         globalvars.save_data.current_room = room
@@ -123,11 +126,14 @@ def save():
 
 @when('look')
 def look():
-    print(globalvars.save_data.current_room.desc)
-    print("There is:")
-    if not globalvars.save_data.current_room:
-        print('nothing')
-        return
-    for item in globalvars.save_data.current_room.items:
-        print(f'a {item}')
-    print(f'In the {globalvars.save_data.current_room.name}')    
+    print(f'{globalvars.save_data.current_room.desc}\n')
+    if globalvars.save_data.current_room.items:
+        print("Inside, there is")
+        for item in globalvars.save_data.current_room.items:
+            print(f'- a {item}')
+        print('')
+    
+    if globalvars.save_data.current_room.exits:
+        print("From here you can go to")
+        for room in globalvars.save_data.current_room.exits.values():
+            print(f"- the {room.name}")

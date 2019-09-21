@@ -89,11 +89,12 @@ class RoomSchema(Schema):
     name = fields.String(required=True)
     desc = fields.String(required=True)
     items = fields.List(ItemReference())
+    item_desc = fields.Dict()
     attrs = fields.Dict()
     exits = fields.Dict()
 
     @post_dump
-    def loadRoom(self, data: dict):
+    def loadRoom(self, data):
         def get_name(obj):
             if isinstance(obj, str):
                 return obj
@@ -106,3 +107,23 @@ class RoomSchema(Schema):
     @post_load
     def createRoom(self, data):
         return objects.Room(**data)
+
+
+class RoomSaveSchema(Schema):
+    """
+    A Schema for Rooms in the save file
+
+    """
+
+    name = fields.String(required=True)
+    items = fields.List(ItemReference())
+    attrs = fields.Dict()
+
+    @post_load
+    def createRoom(self, data: dict):
+        from ..globalvars import rooms
+        room = next((r for r in rooms if r.name == data['name']), None)
+        if room is None:
+            raise ValidationError(f"Could not find the room '{data['name']}'")
+        exits = dict((k, v.name) for k, v in room.exits.items())
+        return objects.Room(desc=room.desc, exits=exits, item_desc=room.item_desc, **data)

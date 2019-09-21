@@ -39,6 +39,9 @@ class RoomsConfigSchema(Schema):
 
     @post_load
     def createRoomConfig(self, data: dict):
+        rooms = data['rooms']
+        for room in rooms:
+            room._load_exits(rooms)
         return RoomConfig(**data)
 
 

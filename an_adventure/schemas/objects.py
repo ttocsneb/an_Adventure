@@ -34,7 +34,7 @@ class Player(adventurelib.Bag):
 
 class Room(adventurelib.Room):
 
-    def __init__(self, name: str, desc: str, items: list = None, attrs: dict = None, exits: dict = None):
+    def __init__(self, name: str, desc: str, items: list = None, attrs: dict = None, exits: dict = None, item_desc: dict = None):
         object.__setattr__(self, '_init', False)
         super().__init__(desc)
         self.name = name
@@ -45,6 +45,7 @@ class Room(adventurelib.Room):
         self._items = adventurelib.Bag(items)
         self._attrs = attrs or dict()
         self._exits = exits or dict()
+        self._item_desc = item_desc or dict()
 
         if attrs is not None:
             for attr, value in attrs.items():
@@ -78,8 +79,15 @@ class Room(adventurelib.Room):
     def exits(self):
         exits = dict((d, getattr(self, d)) for d in self._directions if getattr(self, d))
         return exits
+    
+    @property
+    def item_desc(self):
+        return self._item_desc
 
     def __setattr__(self, attr, value):
         if self._init and not isinstance(value, adventurelib.Room):
             self._attrs[attr] = value
         super().__setattr__(attr, value)
+    
+    def __repr__(self):
+        return f"<Room(name='{self.name}', exits={self.exits}, attrs={self.attrs}, items={self.items})>"

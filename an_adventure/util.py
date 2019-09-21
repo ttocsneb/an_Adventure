@@ -5,7 +5,7 @@ import time
 def printSlow(value, min=1, max=30, end='\n', corrupt=False):
     value = str(value)
     for char in value:
-        if corrupt and random.randint(0, 10) == 0:
+        if corrupt and ord(char) > 0x20 and random.randint(0, 10) == 0:
             char = chr(random.randint(0x20, 0xff))
         print(char, end='', flush=True)
         time.sleep((random.random() * (max - min) + min)/1000)

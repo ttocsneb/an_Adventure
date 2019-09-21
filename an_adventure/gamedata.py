@@ -24,9 +24,6 @@ class GameData:
         self.player = player or schemas.objects.Player()
         self.rooms = rooms or list()
 
-        for room in self.rooms:
-            room._load_exits(self.rooms)
-
         if current_room is not None:
             self.current_room = current_room
         else:
@@ -63,11 +60,14 @@ class GameData:
 class GameDataSchema(Schema):
     current_room = schemas.RoomReference()
     player = fields.Nested(schemas.PlayerSchema)
-    rooms = fields.Nested(schemas.RoomSchema, many=True)
+    rooms = fields.Nested(schemas.RoomSaveSchema, many=True)
     callsign = fields.String()
 
     @post_load
     def createGameData(self, data):
+        rooms = data.get('rooms', list())
+        for room in rooms:
+            room._load_exits(rooms)
         return GameData(**data)
 
 

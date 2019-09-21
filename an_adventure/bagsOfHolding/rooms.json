@@ -14,13 +14,13 @@
     },
     {
         "name": "elevator",
-        "desc": "This is an elevator",
+        "desc": "The elevator has two buttons labeled hallway, and terminal",
         "exits": {
-            "down": "b-level"
+            "down": "hallway"
         }
     },
     {
-        "name": "b-level",
+        "name": "hallway",
         "desc": "The elevator stops on the lower level"
     }
 ]

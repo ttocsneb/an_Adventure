@@ -11,7 +11,6 @@ from .util import printSlow, printSlowColor
 import random
 import re
 
-Room.add_direction('up', 'down')
 
 def no_command_matches(command):
     print(random.choice([
@@ -22,7 +21,7 @@ def no_command_matches(command):
 adventurelib.no_command_matches = no_command_matches
 
 def prompt():
-    return  f'{Fore.CYAN}StarThreadCMD> '
+    return  f'{Fore.CYAN}StarThreadCMD>{Fore.RESET} '
 adventurelib.prompt = prompt
 
 def bootstrap(skipIntro=False):
@@ -87,7 +86,7 @@ def bootstrap(skipIntro=False):
         if globalvars.save_data is None:
             printSlow("Creating account.....", corrupt=True)
             globalvars.save_data = gamedata.GameData(callSign, rooms=globalvars.rooms)
-            globalvars.save_data.current_room = "terminal"
+            globalvars.save_data.current_room = "terminal room"
             globalvars.save_data.save()
     
     printSlow("__Access__Granted__\n\n\n", corrupt=True)
