@@ -6,7 +6,9 @@
             "can_scream": "true"
         },
         "items":[
-            "moby huge"
+            "moby huge",
+            "terminal",
+            "Personal Terminal Starthreading Device (PTSD)"
         ],
         "exits": {
             "south": "elevator"

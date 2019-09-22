@@ -29,7 +29,7 @@ def put(item):
 @when ('put ITEM on TARGET')
 def puton(item, target):
     obj = globalvars.save_data.player.find(item)
-    tarobj = globalvars.save_data.current_room.find(target)
+    tarobj = globalvars.save_data.current_room.items.find(target)
     if not obj: 
         print(f'You do not have a {item}.')
     elif not tarobj:
@@ -39,8 +39,35 @@ def puton(item, target):
         globalvars.save_data.player.take(obj)
         #TODO make it so that the item actualy gets put on the target
     else:
-        respond(obj, f'put_fail_{tarobj}', f'You can\'t put the {obj} on the {tarobj}')    
+        respond(obj, f'put_fail_{tarobj}', f'You can\'t put the {obj} on the {tarobj}')   
 
+@when ('use ITEM')
+def use(item):
+    obj = globalvars.save_data.player.find(item)
+    if not obj:
+        print(f'You do not have a {item}.')
+    elif maybe(obj).use == True: 
+        respond(obj, 'use_succ', f'You use the {obj}.')
+        if maybe(obj).single_use == True:
+            globalvars.save_data.player.take(obj)
+    else:
+        respond(obj, 'use_fail', f'You cannot use a {obj} now.') 
+
+@when ('use ITEM on TARGET')
+def useon(item, target):
+    obj = globalvars.save_data.player.find(item)
+    tarobj = globalvars.save_data.current_room.items.find(target)
+    if not obj: 
+        print(f'You do not have a {item}.')
+    elif not tarobj:
+        print(f'There is no {target} to use the {obj} on')
+    elif maybe(obj).use_on.is_some and tarobj.name in obj.use_on:
+        respond(obj, f'use_succ_{target}', f'You use the {obj} on the {tarobj}')
+        if maybe(obj).single_use == True:
+            globalvars.save_data.player.take(obj)
+        #TODO make it so that the item actualy gets used on the target
+    else:
+        respond(obj, f'use_fail_{tarobj}', f'You can\'t use the {obj} on the {tarobj}')
 
 @when ('eat ITEM')
 def eat(item):
@@ -62,7 +89,7 @@ def inventory():
         print('nothing')
         return
     for item in globalvars.save_data.player:
-        print(f'* {item}')
+        print(f'-a {item}')
 
 
 @when("take ITEM")
@@ -108,15 +135,13 @@ def brush_teeth():
 def go(newroom):
     direction = next((k for k, v in globalvars.save_data.current_room.exits.items() if v.name.startswith(newroom.replace('the ', ''))), None)
     if direction is None:
-        print(f"You can't go there, {newroom} isn't a room")
+        print(f"You can't go there, {newroom} isn't a room you can reach from here")
         return
     room = globalvars.save_data.current_room.exit(direction)
     if room:
         globalvars.save_data.current_room = room
         print(f'You go to the {room.name}')
-        look()
-    else:
-        print("Looks like that's not a valid option at the momment.")    
+        look()  
 
 @when('save')
 def save():

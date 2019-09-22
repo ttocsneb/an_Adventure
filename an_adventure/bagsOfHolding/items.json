@@ -27,7 +27,30 @@
             "computer"
         ],
         "attrs":{
-            "color":"dark grey"
+            "color":"dark grey",
+            "immovable": true
+        }
+    },
+    {
+        "names":[
+            "Personal Terminal Starthreading Device (PTSD)",
+            "PTSD",
+            "Personal Terminal Starthreading Device"
+        ],
+        "attrs":{
+            "color": "copper-red",
+            "size": "pocket sized",
+            "use_on": "terminal",
+            "use_succ_terminal": "You find a place to connect the two devices, \nand what appears to be pre-downloaded \nsoftware quickly ports terrenc3 from the terminal \nto the handheld device. \n\nYou remove it once it has finished."
+        }
+    },
+    {
+        "names":[
+            "shard of glass",
+            "glass"
+        ],
+        "attrs":{
+            
         }
     }
 ]
