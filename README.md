@@ -1,9 +1,3 @@
----
-noteId: "bd0c2270db4b11e9b4bed939ab3919bf"
-tags: []
-
----
-
 # an_Adventure
 
 [![CodeFactor](https://www.codefactor.io/repository/github/ttocsneb/an_adventure/badge/master)](https://www.codefactor.io/repository/github/ttocsneb/an_adventure/overview/master)
