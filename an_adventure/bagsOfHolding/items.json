@@ -50,7 +50,28 @@
             "glass"
         ],
         "attrs":{
-            
+            "put_in":[
+                "elevator"
+            ]
+        }
+    },
+    {
+        "names":[
+            "bagel",
+            "souls of the innocent"
+        ],
+        "attrs":{
+            "edible": true,
+            "color": "light-brown",
+            "size": "7.36 inches in diameter",
+            "eat_succ": "You consume the bagel triumphantly, absorbing its vast stores of nutrients.",
+            "take_succ": "You obtain the glorious bagel lifting it into the air, before stoing the prescious item for future use.",
+            "terminal room_put_succ": "You drop the bagel onto the terminal with a slight clang and slow thud, it now lays on the terminal feeling betrayed.",
+            "put_in": [
+                "terminal room", 
+                "elevator",
+                "hallway"
+            ]
         }
     }
 ]

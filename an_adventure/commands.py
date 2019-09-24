@@ -20,9 +20,9 @@ def put(item):
     if not obj:
         print(f'You do not have a {item}.')
     elif maybe(obj).put_in.is_some() and globalvars.save_data.current_room.name in obj.put_in: 
-        respond(obj, 'room_put_succ', f'You place the {obj} in the {globalvars.save_data.current_room}')
-        globalvars.save_data.player.take(obj)
-        globalvars.save_data.current_room.add(obj)
+        respond(obj, f'{globalvars.save_data.current_room.name}_put_succ', f'You place the {obj} in the {globalvars.save_data.current_room.name}')
+        globalvars.save_data.player.take(item)
+        globalvars.save_data.current_room.items.add(obj)
     else:
         respond(obj, 'room_put_fail', f'You cannot put a {obj} here.')    
 
@@ -49,7 +49,7 @@ def use(item):
     elif maybe(obj).use == True: 
         respond(obj, 'use_succ', f'You use the {obj}.')
         if maybe(obj).single_use == True:
-            globalvars.save_data.player.take(obj)
+            globalvars.save_data.player.take(item)
     else:
         respond(obj, 'use_fail', f'You cannot use a {obj} now.') 
 
@@ -59,12 +59,12 @@ def useon(item, target):
     tarobj = globalvars.save_data.current_room.items.find(target)
     if not obj: 
         print(f'You do not have a {item}.')
-    elif not tarobj:
+    elif tarobj.is_none:
         print(f'There is no {target} to use the {obj} on')
     elif maybe(obj).use_on.is_some and tarobj.name in obj.use_on:
         respond(obj, f'use_succ_{target}', f'You use the {obj} on the {tarobj}')
         if maybe(obj).single_use == True:
-            globalvars.save_data.player.take(obj)
+            globalvars.save_data.player.take(item)
         #TODO make it so that the item actualy gets used on the target
     else:
         respond(obj, f'use_fail_{tarobj}', f'You can\'t use the {obj} on the {tarobj}')
@@ -94,13 +94,13 @@ def inventory():
 
 @when("take ITEM")
 def take(item):
-    obj = globalvars.save_data.current_room.items.take(item)
+    obj = globalvars.save_data.current_room.items.find(item)
     if not obj:
         print(f'there is no {item} here')
     elif maybe(obj).immovable == True:
-        globalvars.save_data.current_room.items.add(obj)
         respond(obj, 'take_fail', f'You cannot take the {obj}.')
     else:    
+        globalvars.save_data.current_room.items.take(item)
         globalvars.save_data.player.add(obj)
         respond(obj, 'take_succ', f'You have taken a {obj}.')
 
@@ -119,8 +119,8 @@ def lookat(item):
 
 @when("brush teeth")
 def brush_teeth():
-    obj = globalvars.save_data.player.find('toothpaste')
-    if not obj:
+    obj = maybe(globalvars.save_data.player.find('toothpaste'))
+    if obj.is_none:
         print('you have no toothpaste')
     else:
         say(""" 

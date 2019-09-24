@@ -8,7 +8,9 @@
         "items":[
             "moby huge",
             "terminal",
-            "Personal Terminal Starthreading Device (PTSD)"
+            "Personal Terminal Starthreading Device (PTSD)",
+            "shard of glass",
+            "bagel"
         ],
         "exits": {
             "south": "elevator"

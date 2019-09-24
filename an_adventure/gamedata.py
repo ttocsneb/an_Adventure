@@ -106,4 +106,4 @@ def saveGameData(gameData: GameData, dir=None):
         raise RuntimeError(f"Could not save gamedata:\n{errs}")
 
     with open(path.join(dir, name_cipher.encodeStr(gameData.callsign) + '.json'), 'w') as file:
-        json.dump(data_dict.data, file)
+        json.dump(data_dict.data, file, sort_keys=True, indent=4)

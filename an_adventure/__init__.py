@@ -30,7 +30,7 @@ def bootstrap(skipIntro=False):
     else: 
         os.system('clear') 
 
-    if gamedata.file_count < 1: #TODO create cheat code save
+    if gamedata.file_count < 2 or skipIntro: #TODO create cheat code save
         printSlow("""You awake, your head aching.\n Getting up, you take in an unfamiliar surrounding, 
         and a terminal clicks to life directly in front of you.\n
         Random characters crawl accross its screen as it struggles to make sense of itself. \n\n""", max=100, corrupt=True)
