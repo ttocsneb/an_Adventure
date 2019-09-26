@@ -1,6 +1,7 @@
 # import curses
 # https://docs.python.org/3/howto/curses.html
 import os
+from pymaybe import maybe
 import colorama
 from colorama import Fore
 import adventurelib
@@ -10,6 +11,40 @@ from . import commands, gamedata, schemas, globalvars
 from .util import printSlow, printSlowColor
 import random
 import re
+
+def _handle_command(cmd):
+    """Handle a command typed by the user."""
+    ws = cmd.lower().split()
+
+    for pattern, func, kwargs in adventurelib._available_commands():
+        args = kwargs.copy()
+        matches = pattern.match(ws)
+        if matches is not None:
+            globalvars.save_data.turn_counter += 1
+            args.update(matches)
+            func(**args)
+            update_status(globalvars.save_data.turn_counter)
+            break
+    else:
+        no_command_matches(cmd)
+    print()
+adventurelib._handle_command = _handle_command    
+
+def update_status(turn_counter):
+    if maybe(globalvars.save_data.current_room).breathable == 1:
+        print("oxygen -10%")
+        pass
+    elif maybe(globalvars.save_data.current_room).breathable == 2:
+        print("oxygen -30%") 
+        pass
+    #else TODO
+        #oxygen = min(oxygen+10%, 100%)
+        #pass
+
+    #if oxygen <= 0:
+    #   Death_Screen()
+
+
 
 
 def no_command_matches(command):
@@ -30,7 +65,7 @@ def bootstrap(skipIntro=False):
     else: 
         os.system('clear') 
 
-    if gamedata.file_count < 2 or skipIntro: #TODO create cheat code save
+    if gamedata.file_count < 2 and not skipIntro: #TODO create cheat code save
         printSlow("""You awake, your head aching.\n Getting up, you take in an unfamiliar surrounding, 
         and a terminal clicks to life directly in front of you.\n
         Random characters crawl accross its screen as it struggles to make sense of itself. \n\n""", max=100, corrupt=True)

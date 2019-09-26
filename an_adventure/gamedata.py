@@ -19,7 +19,7 @@ if not path.isdir(_game_data_file):
 
 
 class GameData:
-    def __init__(self, callsign: str, player: schemas.objects.Player = None, rooms: list = None, current_room: str = None):
+    def __init__(self, callsign: str, turn_counter: int = 0, player: schemas.objects.Player = None, rooms: list = None, current_room: str = None):
         self.callsign = callsign
         self.player = player or schemas.objects.Player()
         self.rooms = rooms or list()
@@ -28,6 +28,7 @@ class GameData:
             self.current_room = current_room
         else:
             self._current_room = None
+        self.turn_counter = turn_counter
     
     @property
     def current_room(self):
@@ -62,6 +63,7 @@ class GameDataSchema(Schema):
     player = fields.Nested(schemas.PlayerSchema)
     rooms = fields.Nested(schemas.RoomSaveSchema, many=True)
     callsign = fields.String()
+    turn_counter = fields.Int()
 
     @post_load
     def createGameData(self, data):
