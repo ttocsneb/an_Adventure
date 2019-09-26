@@ -25,6 +25,21 @@
     },
     {
         "name": "hallway",
-        "desc": "The elevator stops on the lower level"
+        "desc": "The elevator stops on the lower level",
+        "exits": {
+            "east": "cafeteria"
+        }
+    },
+    {
+        "name": "cafeteria",
+        "desc": "Fuckin' bagels everywhere",
+        "items":[
+            "bagel"
+        ],
+        "attrs":{
+            "breathable": 1
+        }
     }
+
+
 ]

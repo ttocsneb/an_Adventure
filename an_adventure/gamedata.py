@@ -19,16 +19,20 @@ if not path.isdir(_game_data_file):
 
 
 class GameData:
-    def __init__(self, callsign: str, turn_counter: int = 0, player: schemas.objects.Player = None, rooms: list = None, current_room: str = None):
+    def __init__(self, callsign: str, turn_counter: int = 0, oxygen: int = 100, nutrition: int = 9, hydration: int = 6, vitality: int = 3, player: schemas.objects.Player = None, rooms: list = None, current_room: str = None):
         self.callsign = callsign
         self.player = player or schemas.objects.Player()
         self.rooms = rooms or list()
-
+        self.turn_counter = turn_counter
+        self.oxygen = oxygen
+        self.nutrition = nutrition
+        self.hydration = hydration
+        self.vitality = vitality
         if current_room is not None:
             self.current_room = current_room
         else:
             self._current_room = None
-        self.turn_counter = turn_counter
+        
     
     @property
     def current_room(self):
@@ -64,6 +68,10 @@ class GameDataSchema(Schema):
     rooms = fields.Nested(schemas.RoomSaveSchema, many=True)
     callsign = fields.String()
     turn_counter = fields.Int()
+    oxygen = fields.Int()
+    nutrition = fields.Int()
+    hydration = fields.Int()
+    vitality = fields.Int()
 
     @post_load
     def createGameData(self, data):

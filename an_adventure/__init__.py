@@ -23,27 +23,24 @@ def _handle_command(cmd):
             globalvars.save_data.turn_counter += 1
             args.update(matches)
             func(**args)
-            update_status(globalvars.save_data.turn_counter)
+            update_status()
             break
     else:
         no_command_matches(cmd)
     print()
 adventurelib._handle_command = _handle_command    
 
-def update_status(turn_counter):
+def update_status():
     if maybe(globalvars.save_data.current_room).breathable == 1:
-        print("oxygen -10%")
-        pass
+        globalvars.save_data.oxygen -= 10
     elif maybe(globalvars.save_data.current_room).breathable == 2:
-        print("oxygen -30%") 
-        pass
-    #else TODO
-        #oxygen = min(oxygen+10%, 100%)
-        #pass
+        globalvars.save_data.oxygen -= 30
+    else:
+        globalvars.save_data.oxygen = min(globalvars.save_data.oxygen + 10, 100)
 
-    #if oxygen <= 0:
-    #   Death_Screen()
-
+    if globalvars.save_data.oxygen <= 0:
+        #TODO Deathscreen
+        print("Death")
 
 
 
@@ -125,6 +122,12 @@ def bootstrap(skipIntro=False):
             globalvars.save_data.save()
     
     printSlow("__Access__Granted__\n\n\n", corrupt=True)
+
+    if globalvars.save_data.turn_counter == 0 and not skipIntro:
+        #tutorial()
+        pass
+
+
 
 
 def start(skipIntro=False):

@@ -141,7 +141,15 @@ def go(newroom):
     if room:
         globalvars.save_data.current_room = room
         print(f'You go to the {room.name}')
-        look()  
+        look()
+        update_status()
+
+def update_status():
+    globalvars.save_data.nutrition -= 1
+    globalvars.save_data.hydration -= 1
+    if globalvars.save_data.nutrition < 1 or globalvars.save_data.hydration < 1:
+        print("Death")
+        #TODO Death  
 
 @when('save')
 def save():
@@ -162,3 +170,10 @@ def look():
         print("From here you can go to")
         for room in globalvars.save_data.current_room.exits.values():
             print(f"- the {room.name}")
+        print('')    
+
+    if maybe(globalvars.save_data.current_room).breathable == 1:
+        respond(globalvars.save_data.current_room, 'O2_depleted_message', "Your environment is depleted of oxygen!")
+    elif maybe(globalvars.save_data.current_room).breathable == 2:
+        respond(globalvars.save_data.current_room, 'vacuum_message', "Your environment is exposed to the vacuum of space!")
+    print('')    
