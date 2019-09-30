@@ -6,7 +6,23 @@ import time
 import random
 from pymaybe import maybe
 from . import globalvars
+from . import gamedata
+from .util import printSlow, printSlowColor
 
+
+def Death(condition, custom):
+    if custom:
+        print(custom)
+    elif condition == "starve":
+        print("You feel starvation drag your mind into delerium.")      
+    elif condition == "thirst":
+        print("Your throat as dry as the desert, you slip into unconsiousness.")
+    elif condition == "suffocate":
+        print("You claw at your throat and try to draw in one last breath, but you fade into the black.")
+    elif condition == "wounds":
+        print("Body aching and blood pooling, you sucumb to your wounds.")
+
+    globalvars.save_data = gamedata.loadGameData(globalvars.save_data.callsign)              
 
 def respond(obj, attr, default):
     if hasattr(obj, attr):
@@ -132,7 +148,7 @@ def brush_teeth():
         """)
 
 @when('enter NEWROOM')
-def go(newroom):
+def go(newroom, skipIntro=False):
     direction = next((k for k, v in globalvars.save_data.current_room.exits.items() if v.name.startswith(newroom.replace('the ', ''))), None)
     if direction is None:
         print(f"You can't go there, {newroom} isn't a room you can reach from here")
@@ -142,14 +158,20 @@ def go(newroom):
         globalvars.save_data.current_room = room
         print(f'You go to the {room.name}')
         look()
-        update_status()
+        if maybe(globalvars.save_data).nutrition == 1:
+            printSlowColor(Fore.RED + "Blood sugar levels are dangerously low." + Fore.RESET)
+        if maybe(globalvars.save_data).hyrdration == 1:
+            printSlowColor(Fore.RED + "H2O content of blood is dangerously low." + Fore.RESET)
+        update_status(skipIntro)
 
-def update_status():
-    globalvars.save_data.nutrition -= 1
-    globalvars.save_data.hydration -= 1
-    if globalvars.save_data.nutrition < 1 or globalvars.save_data.hydration < 1:
-        print("Death")
-        #TODO Death  
+def update_status(skipIntro=False):
+    if not skipIntro:
+        globalvars.save_data.nutrition -= 1
+        globalvars.save_data.hydration -= 1
+        if globalvars.save_data.nutrition < 1:
+            Death("starve", None)
+        elif globalvars.save_data.hydration < 1:
+            Death("thirst", None)
 
 @when('save')
 def save():
@@ -161,19 +183,22 @@ def save():
 def look():
     print(f'{globalvars.save_data.current_room.desc}\n')
     if globalvars.save_data.current_room.items:
-        print("Inside, there is")
+        print("Inside, there is:")
         for item in globalvars.save_data.current_room.items:
             print(f'- a {item}')
         print('')
     
     if globalvars.save_data.current_room.exits:
-        print("From here you can go to")
+        print("From here you can go to:")
         for room in globalvars.save_data.current_room.exits.values():
             print(f"- the {room.name}")
         print('')    
 
     if maybe(globalvars.save_data.current_room).breathable == 1:
-        respond(globalvars.save_data.current_room, 'O2_depleted_message', "Your environment is depleted of oxygen!")
+        respond(globalvars.save_data.current_room, 'O2_depleted_message', "Your environment is depleted of oxygen.")
+        print('')   
     elif maybe(globalvars.save_data.current_room).breathable == 2:
-        respond(globalvars.save_data.current_room, 'vacuum_message', "Your environment is exposed to the vacuum of space!")
-    print('')    
+        respond(globalvars.save_data.current_room, 'vacuum_message', "Your environment is exposed to the vacuum of space.")
+        print('')   
+
+     

@@ -12,7 +12,7 @@ from .util import printSlow, printSlowColor
 import random
 import re
 
-def _handle_command(cmd):
+def _handle_command(cmd, skipIntro=False):
     """Handle a command typed by the user."""
     ws = cmd.lower().split()
 
@@ -23,24 +23,28 @@ def _handle_command(cmd):
             globalvars.save_data.turn_counter += 1
             args.update(matches)
             func(**args)
-            update_status()
+            update_status(skipIntro)
             break
     else:
         no_command_matches(cmd)
     print()
 adventurelib._handle_command = _handle_command    
 
-def update_status():
-    if maybe(globalvars.save_data.current_room).breathable == 1:
-        globalvars.save_data.oxygen -= 10
-    elif maybe(globalvars.save_data.current_room).breathable == 2:
-        globalvars.save_data.oxygen -= 30
+def update_status(skipIntro=False):
+    if not skipIntro: 
+        if maybe(globalvars.save_data.current_room).breathable == 1:
+            globalvars.save_data.oxygen -= 10
+            if globalvars.save_data.oxygen == 10:
+                printSlowColor(Fore.RED + "Your oxygen levels are dangerously low." + Fore.RESET)
+        elif maybe(globalvars.save_data.current_room).breathable == 2:
+            globalvars.save_data.oxygen -= 30
+            if globalvars.save_data.oxygen == 30:
+                printSlowColor(Fore.RED + "Your oxygen levels are dangerously low." + Fore.RESET)
     else:
         globalvars.save_data.oxygen = min(globalvars.save_data.oxygen + 10, 100)
-
+ 
     if globalvars.save_data.oxygen <= 0:
-        #TODO Deathscreen
-        print("Death")
+        commands.Death("suffocate", None)
 
 
 
@@ -124,7 +128,7 @@ def bootstrap(skipIntro=False):
     printSlow("__Access__Granted__\n\n\n", corrupt=True)
 
     if globalvars.save_data.turn_counter == 0 and not skipIntro:
-        #tutorial()
+        #TODO tutorial()
         pass
 
 
