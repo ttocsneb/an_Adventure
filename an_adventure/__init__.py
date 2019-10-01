@@ -12,7 +12,7 @@ from .util import printSlow, printSlowColor
 import random
 import re
 
-def _handle_command(cmd, skipIntro=False):
+def _handle_command(cmd):
     """Handle a command typed by the user."""
     ws = cmd.lower().split()
 
@@ -23,23 +23,22 @@ def _handle_command(cmd, skipIntro=False):
             globalvars.save_data.turn_counter += 1
             args.update(matches)
             func(**args)
-            update_status(skipIntro)
+            update_status()
             break
     else:
         no_command_matches(cmd)
     print()
 adventurelib._handle_command = _handle_command    
 
-def update_status(skipIntro=False):
-    if not skipIntro: 
-        if maybe(globalvars.save_data.current_room).breathable == 1:
-            globalvars.save_data.oxygen -= 10
-            if globalvars.save_data.oxygen == 10:
-                printSlowColor(Fore.RED + "Your oxygen levels are dangerously low." + Fore.RESET)
-        elif maybe(globalvars.save_data.current_room).breathable == 2:
-            globalvars.save_data.oxygen -= 30
-            if globalvars.save_data.oxygen == 30:
-                printSlowColor(Fore.RED + "Your oxygen levels are dangerously low." + Fore.RESET)
+def update_status():
+    if maybe(globalvars.save_data.current_room).breathable == 1:
+        globalvars.save_data.oxygen -= 10
+        if globalvars.save_data.oxygen == 10:
+            printSlowColor(Fore.RED + "Your oxygen levels are dangerously low." + Fore.RESET)
+    elif maybe(globalvars.save_data.current_room).breathable == 2:
+        globalvars.save_data.oxygen -= 30
+        if globalvars.save_data.oxygen == 30:
+            printSlowColor(Fore.RED + "Your oxygen levels are dangerously low." + Fore.RESET)
     else:
         globalvars.save_data.oxygen = min(globalvars.save_data.oxygen + 10, 100)
  

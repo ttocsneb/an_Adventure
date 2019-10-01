@@ -4,6 +4,7 @@ from colorama import Fore
 from adventurelib import say, when, Bag, Item
 import time
 import random
+import os
 from pymaybe import maybe
 from . import globalvars
 from . import gamedata
@@ -21,6 +22,11 @@ def Death(condition, custom):
         print("You claw at your throat and try to draw in one last breath, but you fade into the black.")
     elif condition == "wounds":
         print("Body aching and blood pooling, you sucumb to your wounds.")
+    
+    if os.name == "nt":
+        os.system('cls')
+    else: 
+        os.system('clear') 
 
     globalvars.save_data = gamedata.loadGameData(globalvars.save_data.callsign)              
 
@@ -148,7 +154,7 @@ def brush_teeth():
         """)
 
 @when('enter NEWROOM')
-def go(newroom, skipIntro=False):
+def go(newroom):
     direction = next((k for k, v in globalvars.save_data.current_room.exits.items() if v.name.startswith(newroom.replace('the ', ''))), None)
     if direction is None:
         print(f"You can't go there, {newroom} isn't a room you can reach from here")
@@ -158,20 +164,19 @@ def go(newroom, skipIntro=False):
         globalvars.save_data.current_room = room
         print(f'You go to the {room.name}')
         look()
-        if maybe(globalvars.save_data).nutrition == 1:
-            printSlowColor(Fore.RED + "Blood sugar levels are dangerously low." + Fore.RESET)
-        if maybe(globalvars.save_data).hyrdration == 1:
-            printSlowColor(Fore.RED + "H2O content of blood is dangerously low." + Fore.RESET)
-        update_status(skipIntro)
+        update_status()
 
-def update_status(skipIntro=False):
-    if not skipIntro:
-        globalvars.save_data.nutrition -= 1
-        globalvars.save_data.hydration -= 1
-        if globalvars.save_data.nutrition < 1:
-            Death("starve", None)
-        elif globalvars.save_data.hydration < 1:
-            Death("thirst", None)
+def update_status():
+    globalvars.save_data.nutrition -= 1
+    globalvars.save_data.hydration -= 1
+    if maybe(globalvars.save_data).nutrition == 1:
+        printSlowColor(Fore.RED + "Blood sugar levels are dangerously low." + Fore.RESET)
+    if maybe(globalvars.save_data).hyrdration == 1:
+        printSlowColor(Fore.RED + "H2O content of blood is dangerously low." + Fore.RESET)
+    if globalvars.save_data.nutrition < 1:
+        Death("starve", None)
+    elif globalvars.save_data.hydration < 1:
+        Death("thirst", None)
 
 @when('save')
 def save():
