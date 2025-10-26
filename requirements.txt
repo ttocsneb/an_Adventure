@@ -1,4 +1,4 @@
 # This file is for when the command
 # pip install -r requirements.txt is used
 # Don't remove the period!
-.
+-e .
