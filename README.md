@@ -15,14 +15,14 @@
 
 ```bash
 # 1. Create a virtual environment
-python3.7 -m venv venv
+python -3.7 -m venv venv
 
 # 2. Activate the virtual environment
 .\venv\Scripts\activate
 
 # 3. Upgrade pip and install dependencies
-pip install --upgrade pip
-pip install -r requirements.txt
+pip3.7 install --upgrade pip
+pip3.7 install -r requirements.txt
 ```
 
 ---
